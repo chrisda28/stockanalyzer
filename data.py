@@ -36,7 +36,7 @@ def get_df(json):
         '2. high': float,
         '3. low': float,
         '4. close': float,
-        '5. volume': int
+        '5. volume': 'int64'  # changed from int
     })
     df = df.rename(columns={  # improving column names
         '1. open': 'open',
