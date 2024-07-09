@@ -1,5 +1,9 @@
 import pandas as pd
 
+TRADING_DAYS_PER_YEAR = 252
+RISK_FREE_RATE = .05
+
+
 boa_df = pd.read_csv("stock_data_BAC")
 c_df = pd.read_csv("stock_data_C")
 gs_df = pd.read_csv("stock_data_GS")
@@ -32,62 +36,19 @@ def calc_daily_returns():
     return returns_df
 
 
-
-boo = calc_daily_returns()
-print(boo)
-
+def calc_correlation(dataframe):
+    return dataframe.corr(method="pearson", numeric_only=False)
 
 
+def calc_stdev(dataframe):
+    return dataframe.std(axis=0, skipna = True, ddof=1, numeric_only=False)
 
-
-
-
-
-
+# boo = calc_daily_returns()
+# boob = calc_stdev(boo)
+# print(boob)
 
 
 
 
 
 
-
-
-def calc_correlation(frame1, frame2):
-    pass
-
-
-
-
-
-def calc_stdev():
-    pass
-
-
-def calc_sharpe():
-    pass
-
-
-
-
-# def calc_daily_returns():
-#     """creates list of dataframes for each stock consisting of daily returns"""
-#     daily_returns = []
-#     for frame in frames:
-#         frame = frame.rename(columns={'Unnamed: 0': 'date'})  # Rename the date column
-#         frame['date'] = pd.to_datetime(frame['date'])  # Ensure the 'date' column is datetime
-#         frame['returns'] = frame['close'].pct_change()   # Calculate daily returns
-#         columns_to_include = ['date', 'returns', "ticker"]
-#         daily_returns_ = frame[columns_to_include].copy()  # Create a new DataFrame with date, ticker, and returns
-#         daily_returns.append(daily_returns_)
-#     daily_returns_df = pd.concat(daily_returns)    # use the axis=horizontal parameter to join them horizontally
-#
-#     return daily_returns_df
-#
-# daily_returns = calc_daily_returns()
-# print(daily_returns)
-
-
-
-# boo = boa_df.corr(method="pearson", numeric_only=False)
-#
-# print(boo)
