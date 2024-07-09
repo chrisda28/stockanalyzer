@@ -48,6 +48,28 @@ def calc_stdev(dataframe):
 # print(boob)
 
 
+def prep_data_for_model(single_stock_dataframe):
+    """returns a modified dataframe for single stock to be used in linear regression model"""
+    single_stock_dataframe.rename(columns={'Unnamed: 0': 'date'}, inplace=True)
+    single_stock_dataframe['date'] = pd.to_datetime(single_stock_dataframe['date'])
+
+    single_stock_dataframe.set_index('date', inplace=True)  # setting the index of the entire frame
+    single_stock_dataframe.sort_index(inplace=True)
+
+    single_stock_dataframe['daily returns'] = single_stock_dataframe['close'].pct_change()  # finding the daily returns
+    # and setting column name
+    single_stock_dataframe.drop(index=single_stock_dataframe.index[0], axis=0, inplace=True)  # removing the first row
+    # that has NaN values
+
+
+#### check the recent message incladue
+    prepped_dataframe = pass
+
+    return prepped_dataframe
+
+
+
+
 
 
 
