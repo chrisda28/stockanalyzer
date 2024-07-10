@@ -1,7 +1,6 @@
 import pandas as pd
-
-TRADING_DAYS_PER_YEAR = 252
-RISK_FREE_RATE = .05
+from sklearn import datasets, linear_model
+import numpy as np
 
 
 boa_df = pd.read_csv("stock_data_BAC")
@@ -49,7 +48,8 @@ def calc_stdev(dataframe):
 
 
 def prep_data_for_model(single_stock_dataframe):
-    """returns a modified dataframe for single stock to be used in linear regression model"""
+    """modifies dataframe by finding moving average, daily returns, and previous day close price
+     single stock to be used in linear regression model"""
     single_stock_dataframe.rename(columns={'Unnamed: 0': 'date'}, inplace=True)
     single_stock_dataframe['date'] = pd.to_datetime(single_stock_dataframe['date'])
 
@@ -58,18 +58,22 @@ def prep_data_for_model(single_stock_dataframe):
 
     single_stock_dataframe['daily returns'] = single_stock_dataframe['close'].pct_change()  # finding the daily returns
     # and setting column name
+
+    single_stock_dataframe['20 day moving average'] = single_stock_dataframe['close'].rolling(window=20).mean() # find
+    # the 20-day moving average
+    single_stock_dataframe['previous day close'] = single_stock_dataframe['close'].shift(periods=1)   # create column
+    # for previous day close
+
     single_stock_dataframe.drop(index=single_stock_dataframe.index[0], axis=0, inplace=True)  # removing the first row
-    # that has NaN values
+    # that has NaN values for daily returns and previous day closing price columns
 
-
-#### check the recent message incladue
-    prepped_dataframe = pass
-
-    return prepped_dataframe
+    prepped_frame = single_stock_dataframe
+    return prepped_frame
 
 
 
-
+boo = prep_data_for_model(single_stock_dataframe=jpm_df)
+print(boo)
 
 
 
