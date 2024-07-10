@@ -6,3 +6,5 @@ INTERESTED_STOCKS = ["JPM", "GS", "BAC", "C"]
 
 
 
+
+
