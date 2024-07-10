@@ -8,17 +8,17 @@ from dotenv import load_dotenv
 dotenv_path = os.path.join(os.path.dirname(__file__), 'key.env')   # specifies the path to my environment var
 load_dotenv(dotenv_path)  # loading my environment var
 
-api_key = os.getenv('apikey')
+API_KEY = os.getenv('apikey')
 ENDPOINT = "https://www.alphavantage.co/query"
 
 
 def get_stock_df(ticker):
-    """Make API call to fetch stock data and returns it as json data"""
+    """Make API call to fetch stock data and returns it as dataframe"""
     parameters = {
             "function": "TIME_SERIES_DAILY",
             "symbol": ticker,
             "outputsize": "full",
-            "apikey": api_key
+            "apikey": API_KEY
         }
 
     response = requests.get(ENDPOINT, params=parameters)
@@ -27,24 +27,30 @@ def get_stock_df(ticker):
 
     time_series_data = json_data.get("Time Series (Daily)", {})  # getting the time series data into dict
     df = pd.DataFrame.from_dict(time_series_data, orient='index')
-    df.index = pd.to_datetime(df.index)
+    df.index = pd.to_datetime(df.index)   # making sure its treated as datetime
     df = df.astype(float)  # Convert strings to floats
-    df.columns = ['open', 'high', 'low', 'close', 'volume']
-    df.sort_index(inplace=True)
+    df.columns = ['open', 'high', 'low', 'close', 'volume']    # setting column names
+    df.sort_index(inplace=True)    # sorting the index from oldest at top to the newest on bottom
     return df
 
 
 def get_multiple_stock_df(tickers):
-    """converts json data to cleaned dataframe"""
+    """calls get_stock_def() for each ticker and creates dict to map ticker to dataframe"""
     parameters = {
         "function": "TIME_SERIES_DAILY",
         "symbol": tickers,
         "outputsize": "full",
-        "apikey": api_key
+        "apikey": API_KEY
     }
-    dict_of_all_stock_df = {ticker: get_stock_df(tickers) for ticker in tickers}  # creating dict with key being the
-    # ticker and value being the corresponding data frame holding stock data
+    dict_of_all_stock_df = {}
+    for ticker in tickers:   # creating dict with key being the ticker and
+        # value being the corresponding data frame holding stock data
+        time.sleep(13)  # api rate limit respect
+        df = get_stock_df(ticker)
+        dict_of_all_stock_df[ticker] = df   # setting value to be respective stock's dataframe
+
     return dict_of_all_stock_df
+
 
 
 
