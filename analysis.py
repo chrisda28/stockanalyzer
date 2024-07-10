@@ -45,10 +45,6 @@ def calc_correlation(dataframe):
 def calc_stdev(dataframe):
     return dataframe.std(axis=0, skipna = True, ddof=1, numeric_only=False)
 
-# boo = calc_daily_returns()
-# boob = calc_stdev(boo)
-# print(boob)
-
 
 def prep_data_for_model(single_stock_dataframe):
     """modifies dataframe by finding moving average, daily returns, and previous day close price
@@ -105,35 +101,13 @@ sb.lmplot(x="daily returns", y="close", data=model_data, order=2, ci=None)
 plt.show()
 
 
+boo = calc_daily_returns()
+boob = calc_correlation(boo)
+sb.heatmap(boob)
+plt.show()
 
 
 
-
-
-
-
-# def prep_data_for_model(single_stock_dataframe):
-#     """modifies dataframe by finding moving average, daily returns, and previous day close price
-#      single stock to be used in linear regression model"""
-#     single_stock_dataframe.rename(columns={'Unnamed: 0': 'date'}, inplace=True)
-#     single_stock_dataframe['date'] = pd.to_datetime(single_stock_dataframe['date'])
-#
-#     single_stock_dataframe.set_index('date', inplace=True)  # setting the index of the entire frame
-#     single_stock_dataframe.sort_index(inplace=True)
-#
-#     single_stock_dataframe['daily returns'] = single_stock_dataframe['close'].pct_change()  # finding the daily returns
-#     # and setting column name
-#
-#     single_stock_dataframe['20 day moving average'] = single_stock_dataframe['close'].rolling(window=20).mean()  # find
-#     # the 20-day moving average
-#     single_stock_dataframe['previous day close'] = single_stock_dataframe['close'].shift(periods=1)   # create column
-#     # for previous day close
-#
-#     single_stock_dataframe.drop(index=single_stock_dataframe.index[0], axis=0, inplace=True)  # removing the first row
-#     # that has NaN values for daily returns and previous day closing price columns
-#
-#     prepped_frame = single_stock_dataframe
-#     return prepped_frame
 
 
 
