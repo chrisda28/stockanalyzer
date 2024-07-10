@@ -39,11 +39,13 @@ def calc_daily_returns():
 
 
 def calc_correlation(dataframe):
-    return dataframe.corr(method="pearson", numeric_only=False)
+    correl_df = dataframe.corr(method="pearson", numeric_only=False)
+    return correl_df
 
 
 def calc_stdev(dataframe):
-    return dataframe.std(axis=0, skipna = True, ddof=1, numeric_only=False)
+    stdev_df = dataframe.std(axis=0, skipna = True, ddof=1, numeric_only=False)
+    return stdev_df
 
 
 def prep_data_for_model(single_stock_dataframe):
@@ -70,41 +72,37 @@ def prep_data_for_model(single_stock_dataframe):
     return prepped_frame
 
 
-model_data = prep_data_for_model(single_stock_dataframe=jpm_df)
+def train_linreg_model(dataframe):
+    prepped_data = prep_data_for_model(dataframe)
+
+    x = prepped_data[['20 day moving average', 'close']]
+    y = prepped_data['daily returns']  # attempting to predict the daily returns
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)  # Splitting the data into
+    # training and testing data
+
+    model = LinearRegression()
+
+    model.fit(x_train, y_train)
+    score = model.score(x_test, y_test)
+    return model, score
 
 
-# Separating the data into independent and dependent variables
-# Converting each dataframe into a numpy array
-X = np.array(model_data['20 day moving average']).reshape(-1, 1)
-X_2 = np.array(model_data['close']).reshape(-1, 1)
-X_3 = np.array(model_data['previous day close']).reshape(-1, 1)
-arrays = (X, X_2)
-all_X = np.column_stack(arrays)  # combining arrays
-
-y = np.array(model_data['daily returns']).reshape(-1, 1)  # attempting to predict the daily returns
-
-all_X_train, all_X_test, y_train, y_test = train_test_split(all_X, y, test_size=0.25)  # Splitting the data into
-# training and testing data
-
-regr = LinearRegression()
-
-regr.fit(all_X_train, y_train)
-print(regr.score(all_X_test, y_test))
-
-# sb.lmplot(x="previous day close", y="close", data = model_data, order = 2, ci = None)
-# plt.show()
-
-sb.lmplot(x="close", y="daily returns", data=model_data, order=2, ci=None)
-plt.show()
-
-sb.lmplot(x="daily returns", y="close", data=model_data, order=2, ci=None)
-plt.show()
+def predict_returns(model, x):
+    return model.predict(x)
 
 
-boo = calc_daily_returns()
-boob = calc_correlation(boo)
-sb.heatmap(boob)
-plt.show()
+def show_plot(column1, column2, prepped_data):
+    return sb.lmplot(x=column1, y=column2, data=prepped_data, order=2, ci=None)
+
+
+def correl_heatmap():
+    stock_daily_returns = calc_daily_returns()
+    correl_matrix = calc_correlation(stock_daily_returns)
+    return sb.heatmap(correl_matrix)
+
+
+
 
 
 
