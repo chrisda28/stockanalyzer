@@ -68,43 +68,40 @@ def prep_data_for_model(single_stock_dataframe):
     # for previous day close
 
     single_stock_dataframe.drop(index=single_stock_dataframe.index[:19], axis=0, inplace=True)
-    prepped_frame = single_stock_dataframe.reset_index(drop=True)# removing the first row
-    # that has NaN values for daily returns and previous day closing price columns  # ADJUST THIS COMMENT IF IT WORKS!!!!!!!!!!!
-
+    prepped_frame = single_stock_dataframe.reset_index(drop=True)  # removing first 19 rows that have NaN values
+    # because of the 20-day moving average calc column, need this for clean model data
 
     return prepped_frame
 
 
+model_data = prep_data_for_model(single_stock_dataframe=jpm_df)
 
 
-
-boo = prep_data_for_model(single_stock_dataframe=jpm_df)
-# print(boo)
-
-X = np.array(boo['daily returns']).reshape(-1, 1)# Separating the data into independent and dependent variables
+# Separating the data into independent and dependent variables
 # Converting each dataframe into a numpy array
-X_2 = np.array(boo['20 day moving average']).reshape(-1, 1)
-X_3 = np.array(boo['previous day close']).reshape(-1, 1)
-arrays = (X, X_2, X_3)
+X = np.array(model_data['20 day moving average']).reshape(-1, 1)
+X_2 = np.array(model_data['close']).reshape(-1, 1)
+X_3 = np.array(model_data['previous day close']).reshape(-1, 1)
+arrays = (X, X_2)
 all_X = np.column_stack(arrays)  # combining arrays
 
-y = np.array(boo['close']).reshape(-1, 1)
+y = np.array(model_data['daily returns']).reshape(-1, 1)  # attempting to predict the daily returns
 
-all_X_train, all_X_test, y_train, y_test = train_test_split(all_X, y, test_size=0.25)
+all_X_train, all_X_test, y_train, y_test = train_test_split(all_X, y, test_size=0.25)  # Splitting the data into
+# training and testing data
 
-# Splitting the data into training and testing data
 regr = LinearRegression()
 
 regr.fit(all_X_train, y_train)
 print(regr.score(all_X_test, y_test))
 
-# sb.lmplot(x="previous day close", y="close", data = boo, order = 2, ci = None)
+# sb.lmplot(x="previous day close", y="close", data = model_data, order = 2, ci = None)
 # plt.show()
 
-sb.lmplot(x="20 day moving average", y="close", data = boo, order = 2, ci = None)
+sb.lmplot(x="close", y="daily returns", data=model_data, order=2, ci=None)
 plt.show()
 
-sb.lmplot(x="daily returns", y="close", data = boo, order = 2, ci = None)
+sb.lmplot(x="daily returns", y="close", data=model_data, order=2, ci=None)
 plt.show()
 
 
