@@ -67,38 +67,84 @@ def prep_data_for_model(single_stock_dataframe):
     single_stock_dataframe['previous day close'] = single_stock_dataframe['close'].shift(periods=1)   # create column
     # for previous day close
 
-    single_stock_dataframe.drop(index=single_stock_dataframe.index[0], axis=0, inplace=True)  # removing the first row
-    # that has NaN values for daily returns and previous day closing price columns
+    single_stock_dataframe.drop(index=single_stock_dataframe.index[:19], axis=0, inplace=True)
+    prepped_frame = single_stock_dataframe.reset_index(drop=True)# removing the first row
+    # that has NaN values for daily returns and previous day closing price columns  # ADJUST THIS COMMENT IF IT WORKS!!!!!!!!!!!
 
-    prepped_frame = single_stock_dataframe
+
     return prepped_frame
 
 
 
-boo = prep_data_for_model(single_stock_dataframe=jpm_df)
 
-sb.lmplot(x="previous day close", y="close", data = boo, order = 2, ci = None)
-plt.show()
+
+boo = prep_data_for_model(single_stock_dataframe=jpm_df)
+# print(boo)
 
 X = np.array(boo['daily returns']).reshape(-1, 1)# Separating the data into independent and dependent variables
 # Converting each dataframe into a numpy array
 X_2 = np.array(boo['20 day moving average']).reshape(-1, 1)
 X_3 = np.array(boo['previous day close']).reshape(-1, 1)
-
+arrays = (X, X_2, X_3)
+all_X = np.column_stack(arrays)  # combining arrays
 
 y = np.array(boo['close']).reshape(-1, 1)
 
-
-boo.dropna(inplace=True)  # Dropping any rows with Nan values
-
-
-X_train, X_test, X_2_train, X_2_test, X_3_train, X_3_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+all_X_train, all_X_test, y_train, y_test = train_test_split(all_X, y, test_size=0.25)
 
 # Splitting the data into training and testing data
 regr = LinearRegression()
 
-regr.fit(X_train, y_train)
-print(regr.score(X_test, y_test))
+regr.fit(all_X_train, y_train)
+print(regr.score(all_X_test, y_test))
+
+# sb.lmplot(x="previous day close", y="close", data = boo, order = 2, ci = None)
+# plt.show()
+
+sb.lmplot(x="20 day moving average", y="close", data = boo, order = 2, ci = None)
+plt.show()
+
+sb.lmplot(x="daily returns", y="close", data = boo, order = 2, ci = None)
+plt.show()
+
+
+
+
+
+
+
+
+
+# def prep_data_for_model(single_stock_dataframe):
+#     """modifies dataframe by finding moving average, daily returns, and previous day close price
+#      single stock to be used in linear regression model"""
+#     single_stock_dataframe.rename(columns={'Unnamed: 0': 'date'}, inplace=True)
+#     single_stock_dataframe['date'] = pd.to_datetime(single_stock_dataframe['date'])
+#
+#     single_stock_dataframe.set_index('date', inplace=True)  # setting the index of the entire frame
+#     single_stock_dataframe.sort_index(inplace=True)
+#
+#     single_stock_dataframe['daily returns'] = single_stock_dataframe['close'].pct_change()  # finding the daily returns
+#     # and setting column name
+#
+#     single_stock_dataframe['20 day moving average'] = single_stock_dataframe['close'].rolling(window=20).mean()  # find
+#     # the 20-day moving average
+#     single_stock_dataframe['previous day close'] = single_stock_dataframe['close'].shift(periods=1)   # create column
+#     # for previous day close
+#
+#     single_stock_dataframe.drop(index=single_stock_dataframe.index[0], axis=0, inplace=True)  # removing the first row
+#     # that has NaN values for daily returns and previous day closing price columns
+#
+#     prepped_frame = single_stock_dataframe
+#     return prepped_frame
+
+
+
+
+
+
+
+
 
 
 
