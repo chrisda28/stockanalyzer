@@ -1,7 +1,10 @@
 import pandas as pd
-from sklearn import datasets, linear_model
 import numpy as np
-
+import seaborn as sb
+import matplotlib.pyplot as plt
+from sklearn import preprocessing, svm
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 boa_df = pd.read_csv("stock_data_BAC")
 c_df = pd.read_csv("stock_data_C")
@@ -59,7 +62,7 @@ def prep_data_for_model(single_stock_dataframe):
     single_stock_dataframe['daily returns'] = single_stock_dataframe['close'].pct_change()  # finding the daily returns
     # and setting column name
 
-    single_stock_dataframe['20 day moving average'] = single_stock_dataframe['close'].rolling(window=20).mean() # find
+    single_stock_dataframe['20 day moving average'] = single_stock_dataframe['close'].rolling(window=20).mean()  # find
     # the 20-day moving average
     single_stock_dataframe['previous day close'] = single_stock_dataframe['close'].shift(periods=1)   # create column
     # for previous day close
@@ -73,7 +76,29 @@ def prep_data_for_model(single_stock_dataframe):
 
 
 boo = prep_data_for_model(single_stock_dataframe=jpm_df)
-print(boo)
+
+sb.lmplot(x="previous day close", y="close", data = boo, order = 2, ci = None)
+plt.show()
+
+X = np.array(boo['daily returns']).reshape(-1, 1)# Separating the data into independent and dependent variables
+# Converting each dataframe into a numpy array
+X_2 = np.array(boo['20 day moving average']).reshape(-1, 1)
+X_3 = np.array(boo['previous day close']).reshape(-1, 1)
+
+
+y = np.array(boo['close']).reshape(-1, 1)
+
+
+boo.dropna(inplace=True)  # Dropping any rows with Nan values
+
+
+X_train, X_test, X_2_train, X_2_test, X_3_train, X_3_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+
+# Splitting the data into training and testing data
+regr = LinearRegression()
+
+regr.fit(X_train, y_train)
+print(regr.score(X_test, y_test))
 
 
 
