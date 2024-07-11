@@ -45,12 +45,20 @@ def get_multiple_stock_df(tickers):
     dict_of_all_stock_df = {}
     for ticker in tickers:   # creating dict with key being the ticker and
         # value being the corresponding data frame holding stock data
-        time.sleep(13)  # api rate limit respect
+        time.sleep(16)  # api rate limit respect
         df = get_stock_df(ticker)
         dict_of_all_stock_df[ticker] = df   # setting value to be respective stock's dataframe
 
     return dict_of_all_stock_df
 
-
+# if __name__ == "__main__":
+#     test_tickers = ["JPM", "GS", "C", "BAC"]
+#     try:
+#         result = get_multiple_stock_df(test_tickers)
+#         print(f"Successfully fetched data for {len(result)} stocks.")
+#         for ticker, df in result.items():
+#             print(f"{ticker}: {len(df)} rows of data")
+#     except Exception as e:
+#         print(f"An error occurred: {str(e)}")
 
 

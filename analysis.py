@@ -81,26 +81,39 @@ def make_plot(columnx, columny, prepped_data, title):
     plt.close()   # closing matplotlib figure to free up memory
     return img
 
-def correl_heatmap():
-    stock_daily_returns = calc_daily_returns()
-    correl_matrix = calc_correlation(stock_daily_returns)
-    return sb.heatmap(correl_matrix)
 
+def correl_heatmap(stock_data_dict):
+    """makes correlation heatmap and returns it as an image"""
+    correl_matrix = calc_correlation(stock_data_dict)
+    heatmap = sb.heatmap(correl_matrix, annot=True, vmin=0, vmax=1, square=True, center=0, cmap='coolwarm')
 
+    plt.title("Correlation Heatmap of Daily Returns", fontsize=16)  # setting title name of plot
+    img = io.BytesIO()  # used to store image in a byte stream
+
+    plt.savefig(img, format='png')  # saving plot as an image to be used in flask app
+    img.seek(0)  # reset byte stream to beginning
+    plt.close()  # closing matplotlib figure to free up memory
+    return img
 
 
 # if __name__ == "__main__":
-#     from data import get_stock_df
+#     from data import get_multiple_stock_df
 #     import base64
-#     data = get_stock_df("JPM")
-#     prep = prep_data_for_model(data)
-#     beee = make_plot('20 day moving average', 'daily returns', prep, "booo")
-#     with open("test_plot.png", "wb") as f:
-#         f.write(beee.getvalue())
 #
-#     print("Plot saved as test_plot.png")
-
-
+#     tickers = ["JPM", "GS", "C", "BAC"]
+#     try:
+#         data = get_multiple_stock_df(tickers)
+#
+#         # Generate the correlation heatmap
+#         heatmap_img = correl_heatmap(data)
+#
+#         # Save the heatmap as an image file
+#         with open("correlation_heatmap.png", "wb") as f:
+#             f.write(heatmap_img.getvalue())
+#
+#         print("Heatmap saved as correlation_heatmap.png")
+#     except Exception as e:
+#         print(f"An error occurred: {str(e)}")
 
 
 
