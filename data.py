@@ -13,7 +13,7 @@ ENDPOINT = "https://www.alphavantage.co/query"
 
 
 def get_stock_df(ticker):
-    """Make API call to fetch stock data and returns it as dataframe"""
+    """Makes API call to fetch stock data and returns it as dataframe"""
     parameters = {
             "function": "TIME_SERIES_DAILY",
             "symbol": ticker,
@@ -27,7 +27,7 @@ def get_stock_df(ticker):
 
     time_series_data = json_data.get("Time Series (Daily)", {})  # getting the time series data into dict
     df = pd.DataFrame.from_dict(time_series_data, orient='index')
-    df.index = pd.to_datetime(df.index)   # making sure its treated as datetime
+    df.index = pd.to_datetime(df.index)   # making sure index treated as datetime
     df = df.astype(float)  # Convert strings to floats
     df.columns = ['open', 'high', 'low', 'close', 'volume']    # setting column names
     df.sort_index(inplace=True)    # sorting the index from oldest at top to the newest on bottom
@@ -50,8 +50,6 @@ def get_multiple_stock_df(tickers):
         dict_of_all_stock_df[ticker] = df   # setting value to be respective stock's dataframe
 
     return dict_of_all_stock_df
-
-
 
 
 

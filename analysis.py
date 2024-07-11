@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from sklearn import preprocessing, svm
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+import io
+import base64
 
 
 def calc_daily_returns(df):
@@ -68,9 +70,16 @@ def predict_returns(model, x):
     return model.predict(x)
 
 
-def show_plot(column1, column2, prepped_data):
-    return sb.lmplot(x=column1, y=column2, data=prepped_data, order=2, ci=None)
+def make_plot(columnx, columny, prepped_data, title):
+    """generate plot and return it as an image"""
+    sb.lmplot(x=columnx, y=columny, data=prepped_data, order=2, ci=None)   # generates scatter plot w regression line
+    plt.title(title)   # setting title name of plot
+    img = io.BytesIO()  # used to store image in a byte stream
 
+    plt.savefig(img, format='png')  # saving plot as an image to be used in flask app
+    img.seek(0)    # reset byte stream to beginning
+    plt.close()   # closing matplotlib figure to free up memory
+    return img
 
 def correl_heatmap():
     stock_daily_returns = calc_daily_returns()
@@ -80,9 +89,16 @@ def correl_heatmap():
 
 
 
-
-
-
+# if __name__ == "__main__":
+#     from data import get_stock_df
+#     import base64
+#     data = get_stock_df("JPM")
+#     prep = prep_data_for_model(data)
+#     beee = make_plot('20 day moving average', 'daily returns', prep, "booo")
+#     with open("test_plot.png", "wb") as f:
+#         f.write(beee.getvalue())
+#
+#     print("Plot saved as test_plot.png")
 
 
 
