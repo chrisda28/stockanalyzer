@@ -3,6 +3,8 @@ import requests
 import time
 import os
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
+import functools  # used to preserve metadata of function (i.e. function name, docstring)
 
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'key.env')   # specifies the path to my environment var
@@ -12,6 +14,28 @@ API_KEY = os.getenv('apikey')
 ENDPOINT = "https://www.alphavantage.co/query"
 
 
+def api_limit_checker(func):
+    call_count = 0
+    last_reset = datetime.now()
+
+    @functools.wraps(func)   # used to preserve meta data of function, like name and docstring
+    def wrapper(*args, **kwargs):
+        nonlocal call_count, last_reset   # gets ahold of variable in one scope outer, so not global
+        time_now = datetime.now()   # gets current time
+
+        if time_now - last_reset > timedelta(days=1):  # resetting call count if it's been 1 day
+            call_count = 0
+            last_reset = time_now
+        if call_count >= 25:   # checking if limit has been exceeded
+            print("API limit of 25 calls per day exceeded")
+            return None   # carried out instead of making an API call
+
+        call_count += 1
+        return func(*args, **kwargs)  # calls the original function being decorated
+    return wrapper
+
+
+@api_limit_checker
 def get_stock_df(ticker):
     """Makes API call to fetch stock data and returns it as dataframe"""
     parameters = {
@@ -34,6 +58,7 @@ def get_stock_df(ticker):
     return df
 
 
+@api_limit_checker
 def get_multiple_stock_df(tickers):
     """calls get_stock_def() for each ticker and creates dict to map ticker to dataframe"""
     parameters = {
