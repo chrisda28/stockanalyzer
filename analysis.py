@@ -93,27 +93,25 @@ def correl_heatmap(stock_data_dict):
     plt.savefig(img, format='png')  # saving plot as an image to be used in flask app
     img.seek(0)  # reset byte stream to beginning
     plt.close()  # closing matplotlib figure to free up memory
-    return img
+    base64_heatmap = base64.b64encode(img.getvalue()).decode('utf-8')
+    return base64_heatmap
 
 
 # if __name__ == "__main__":
 #     from data import get_multiple_stock_df
-#     import base64
 #
-#     tickers = ["JPM", "GS", "C", "BAC"]
+#     test_tickers = ["JPM", "BAC", "GS", "C"]
 #     try:
-#         data = get_multiple_stock_df(tickers)
+#         stock_data = get_multiple_stock_df(test_tickers)
+#         heatmap = correl_heatmap(stock_data)
+#         print("Successfully created correlation heatmap. API calls are available.")
 #
-#         # Generate the correlation heatmap
-#         heatmap_img = correl_heatmap(data)
-#
-#         # Save the heatmap as an image file
-#         with open("correlation_heatmap.png", "wb") as f:
-#             f.write(heatmap_img.getvalue())
-#
-#         print("Heatmap saved as correlation_heatmap.png")
 #     except Exception as e:
 #         print(f"An error occurred: {str(e)}")
+#         if "limit" in str(e):
+#             print("It appears you've reached your API call limit for the day.")
+#         else:
+#             print("This may be due to another issue, not necessarily API limits.")
 
 
 
