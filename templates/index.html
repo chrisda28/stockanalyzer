@@ -14,25 +14,32 @@
 <body>
     <header class="bg-primary text-white text-center py-3">
         <h1>{{ header }}</h1>
-        <!-- Navigation menu, logo, etc. -->
+        <nav>
+            <a href="{{ url_for('home') }}" style="color:rgb(255,255,255);">Home</a>
+            <a href="{{ url_for('daily_returns') }}" style="color:rgb(255,255,255);">Daily Returns</a>
+            <a href="{{ url_for('standard_deviation') }}" style="color:rgb(255,255,255);">Standard Deviation</a>
+            <a href="{{ url_for('correlation') }}" style="color:rgb(255,255,255);">Correlation</a>
+            <a href="{{ url_for('linear_regression') }}" style="color:rgb(255,255,255);">Linear Regression Model</a>
+        </nav>
     </header>
 
-    <main class="container my-5">
-        <section>
-            <h2>{{ section_title }}</h2>
-            <p>{{ content }}</p>
-        </section>
-        <section id="correlation">
-            <h2>{{ section_title }}</h2>
-            <p>{{ content }}</p>
-            <img src="data:image/png;base64,{{ base64_heatmap }}", alt="correlation heatmap"/>
-        </section>
-        <section id="regression">
-            <h2>{{ section_title }}</h2>
-            <p>{{ content }}</p>
+    <main>
+        <h2>{{ section_title }}</h2>
+        <p> {{ content }}</p>
 
-        </section>
-        <!-- Add more sections as needed -->
+        {% if image %}
+            <img src="data:image/png;base64,{{ image }}" alt="{{ section_title }}"/>
+        {% endif %}
+
+        {% if images %}
+            {% for img in images %}
+                <img src="data:image/png;base64,{{ img }}" alt="Plot"/>
+            {% endfor %}
+        {% endif %}
+
+        {% if table %}
+            {{ table | safe }}
+        {% endif %}
     </main>
 
     <footer class="bg-light text-center py-3">
@@ -43,7 +50,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!--    <script src="{{ url_for('static', filename='scripts.js') }}"></script> &lt;!&ndash; Link to your custom JavaScript file &ndash;&gt;-->
 </body>
 </html>
 

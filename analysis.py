@@ -79,7 +79,8 @@ def make_plot(columnx, columny, prepped_data, title):
     plt.savefig(img, format='png')  # saving plot as an image to be used in flask app
     img.seek(0)    # reset byte stream to beginning
     plt.close()   # closing matplotlib figure to free up memory
-    return img
+    base64_plot = base64.b64encode(img.getvalue()).decode('utf-8')
+    return base64_plot   # needs to be base64 encoded string for flask web app
 
 
 def correl_heatmap(stock_data_dict):
