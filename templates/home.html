@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A brief description of your site">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Web Development, Bootstrap, Flask">
+    <meta name="author" content="Your Name">
+    <title>Analyzing Bank Stocks</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet" >
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-3">
+        <h1>{{ header }}</h1>
+        <nav>
+            <a class="btn btn-secondary" href="{{ url_for('home') }}" role="button">Home</a>
+            <a class="btn btn-secondary" href="{{ url_for('standard_deviation') }}" role="button">Standard Deviation</a>
+            <a class="btn btn-secondary" href="{{ url_for('moving_average') }}" role="button">20-Day Moving Average</a>
+            <a class="btn btn-secondary" href="{{ url_for('correlation') }}" role="button">Correlation</a>
+            <a class="btn btn-secondary" href="{{ url_for('linear_regression') }}" role="button">Linear Regression Model</a>
+
+        </nav>
+    </header>
+
+    <main>
+        <div class="container-fluid mt-4">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a href="#" class="btn btn-primary mt-auto">See Data Visualization</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam commodo cursus auctor. Etiam dui mi, dictum nec neque ac, lacinia dictum velit.</p>
+                            <a href="#" class="btn btn-primary mt-auto">See Data Visualization</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam commodo cursus auctor. Etiam dui mi, dictum nec neque ac, lacinia dictum velit.</p>
+                            <a href="#" class="btn btn-primary mt-auto">See Data Visualization</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam commodo cursus auctor. Etiam dui mi, dictum nec neque ac, lacinia dictum velit.</p>
+                            <a href="#" class="btn btn-primary mt-auto">See Data Visualization</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-light text-center py-3">
+        <p>&copy; 2024 Christian Asimou. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

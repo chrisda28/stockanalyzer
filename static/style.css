@@ -1,0 +1,21 @@
+
+.container-fluid {
+            max-width: 1400px; /* Adjust this value as needed */
+        }
+        .card {
+            height: 100%;
+            margin-bottom: 20px;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+        }
+        .card-text {
+            flex-grow: 1;
+        }
+        @media (min-width: 992px) {
+            .col-lg-3 {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
