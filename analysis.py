@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 import seaborn as sb
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from sklearn import preprocessing, svm
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import io
 import base64
+import os
 
 
 def calc_daily_returns(df):
@@ -70,7 +72,52 @@ def predict_returns(model, x):
     return model.predict(x)
 
 
-def make_plot(columnx, columny, prepped_data, title):
+def prepare_data_for_plotting(df):
+    """Prepare data specifically for plotting without affecting original calculations"""
+    plot_df = df.copy()  # making copy of df
+    plot_df.index = pd.date_range(start='1970-01-02', periods=len(df), freq='B')
+    plot_df['20 day moving average'] = plot_df['close'].rolling(window=20).mean()  # calc 20 day moving average
+    return plot_df.dropna()
+
+
+def make_20dayma_plot(prepped_data, title):
+    """Generate plot and return it as an image"""
+    fig, ax = plt.subplots(figsize=(15, 8))
+    sb.lineplot(x=prepped_data.index, y=prepped_data['20 day moving average'], ax=ax)
+    ax.set_title(title)
+    ax.set_xlabel("Date")
+    ax.set_ylabel("20-Day Moving Average")
+
+    # Configure x-axis to show only years
+    years = mdates.YearLocator(5)  # every 5 years there is a tick
+    years_fmt = mdates.DateFormatter('%Y')
+    ax.xaxis.set_major_locator(years)
+    ax.xaxis.set_major_formatter(years_fmt)
+
+    # Add minor ticks for each year
+    ax.xaxis.set_minor_locator(mdates.YearLocator())
+
+    # Rotate and align the tick labels so they look better
+    fig.autofmt_xdate()
+
+    # Adjust y-axis to start from 0
+    ax.set_ylim(bottom=0)
+
+    # Add grid for better readability
+    ax.grid(True, linestyle='--', alpha=0.7)
+
+    static_dir = os.path.join(os.getcwd(), 'static')
+    img_path = os.path.join(static_dir, 'gs20.png')
+
+    plt.tight_layout()
+    plt.savefig(img_path, format='png', dpi=300)
+    plt.close(fig)
+
+    print(f"Plot saved to {img_path}")
+    return img_path
+
+
+def make_plot(columnx, columny, prepped_data, title):   ## NEED TO ADJUST THIS TO SAVE IMG IN STATIC FOLDER
     """generate plot and return it as an image"""
     sb.lmplot(x=columnx, y=columny, data=prepped_data, order=2, ci=None)   # generates scatter plot w regression line
     plt.title(title)   # setting title name of plot
@@ -83,7 +130,7 @@ def make_plot(columnx, columny, prepped_data, title):
     return base64_plot   # needs to be base64 encoded string for flask web app
 
 
-def correl_heatmap(stock_data_dict):
+def correl_heatmap(stock_data_dict):    ## NEED TO ADJUST THIS TO SAVE IMG IN STATIC FOLDER
     """makes correlation heatmap and returns it as an image"""
     correl_matrix = calc_correlation(stock_data_dict)
     heatmap = sb.heatmap(correl_matrix, annot=True, vmin=0, vmax=1, square=True, center=0, cmap='coolwarm')
@@ -96,6 +143,25 @@ def correl_heatmap(stock_data_dict):
     plt.close()  # closing matplotlib figure to free up memory
     base64_heatmap = base64.b64encode(img.getvalue()).decode('utf-8')
     return base64_heatmap
+
+
+# if __name__ == "__main__":
+#     from data import get_stock_df
+#
+#     ticker = "C"
+#     stock = get_stock_df(ticker)
+#     print(stock)
+    # # Use your original prep_data_for_model function
+    # prepped = prep_data_for_model(stock)
+    #
+    # # Prepare data specifically for plotting
+    # plot_data = prepare_data_for_plotting(prepped)
+    #
+    # print("Plot data index dtype:", plot_data.index.dtype)
+    # print("First few dates:", plot_data.index[:5])
+    # print("Last few dates:", plot_data.index[-5:])
+    #
+    # make_20dayma_plot(plot_data, f"{ticker} 20-Day Moving Average")
 
 
 # if __name__ == "__main__":

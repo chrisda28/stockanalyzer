@@ -3,8 +3,7 @@ import requests
 import time
 import os
 from dotenv import load_dotenv
-from datetime import datetime, timedelta
-import functools  # used to preserve metadata of function (i.e. function name, docstring)
+from api_limit_checking import *
 
 
 dotenv_path = os.path.join(os.path.dirname(__file__), 'key.env')   # specifies the path to my environment var
@@ -12,27 +11,6 @@ load_dotenv(dotenv_path)  # loading my environment var
 
 API_KEY = os.getenv('apikey')
 ENDPOINT = "https://www.alphavantage.co/query"
-
-
-def api_limit_checker(func):
-    call_count = 0
-    last_reset = datetime.now()
-
-    @functools.wraps(func)   # used to preserve meta data of function, like name and docstring
-    def wrapper(*args, **kwargs):
-        nonlocal call_count, last_reset   # gets ahold of variable in one scope outer, so not global
-        time_now = datetime.now()   # gets current time
-
-        if time_now - last_reset > timedelta(days=1):  # resetting call count if it's been 1 day
-            call_count = 0
-            last_reset = time_now
-        if call_count >= 25:   # checking if limit has been exceeded
-            print("API limit of 25 calls per day exceeded")
-            return None   # carried out instead of making an API call
-
-        call_count += 1
-        return func(*args, **kwargs)  # calls the original function being decorated
-    return wrapper
 
 
 @api_limit_checker
@@ -48,8 +26,11 @@ def get_stock_df(ticker):
     response = requests.get(ENDPOINT, params=parameters)
     response.raise_for_status()    # used for https errors
     json_data = response.json()
-
     time_series_data = json_data.get("Time Series (Daily)", {})  # getting the time series data into dict
+    if not time_series_data:   # checking if we hit limit
+        print(f"No data received for {ticker}. This might be due to reaching the API limit.")
+        return None
+
     df = pd.DataFrame.from_dict(time_series_data, orient='index')
     df.index = pd.to_datetime(df.index)   # making sure index treated as datetime
     df = df.astype(float)  # Convert strings to floats
@@ -75,6 +56,15 @@ def get_multiple_stock_df(tickers):
         dict_of_all_stock_df[ticker] = df   # setting value to be respective stock's dataframe
 
     return dict_of_all_stock_df
+
+
+if __name__ == "__main__":
+    test_tickers = ["JPM"]
+    stock = get_stock_df(test_tickers)
+    print(stock)
+
+
+
 
 # if __name__ == "__main__":
 #     test_tickers = ["JPM", "GS", "C", "BAC"]

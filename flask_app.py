@@ -32,6 +32,11 @@ def daily_returns():
     #     make_plot(columnx=ticker, columny=stock_returns)
 
 
+@app.route("/20daymovingavg")
+def moving_average(ticker):
+    pass
+
+
 @app.route("/correlation")
 def correlation():
     frame_dict = get_multiple_stock_df(INTERESTED_STOCKS)
@@ -40,7 +45,7 @@ def correlation():
     return render_template('index.html', title='Correlation',
                            header='Finance Stock Analysis',
                            section_title='correlation',
-                           content='hiiiiiii', base64_heatmap=heatmap)
+                           content='hiiiiiii', image=heatmap)
 
 
 @app.route("/stdev")
