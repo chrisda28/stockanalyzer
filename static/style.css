@@ -19,3 +19,22 @@
                 padding-right: 10px;
             }
         }
+
+#map {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  padding-left: 200px;
+  padding-right: 200px;
+
+    }
+
+#single {
+    display: block;
+  max-width: 65%;
+  height: auto;
+  margin: 0 auto;
+  padding-left: 200px;
+  padding-right: 200px;
+}

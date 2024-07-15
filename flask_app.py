@@ -1,3 +1,5 @@
+import os.path
+
 import pandas as pd
 from flask import Flask, render_template, url_for
 from data import get_stock_df, get_multiple_stock_df
@@ -8,7 +10,7 @@ import base64
 
 INTERESTED_STOCKS = ["JPM", "GS", "BAC", "C"]
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 
 @app.route("/")
@@ -18,44 +20,45 @@ def home():
                            )
 
 
-@app.route("/dailyreturns")
-def daily_returns():
-    print("hi")
-    # frame_dict = get_multiple_stock_df(tickers=INTERESTED_STOCKS)
-    # for ticker, frame in frame_dict.items():
-    #     stock_returns = calc_daily_returns(frame)
-    #     make_plot(columnx=ticker, columny=stock_returns)
-
-
 @app.route("/20daymovingavg")
 def moving_average():
+    """renders 20-day moving average plot images in flask"""
+    img_folder = os.path.join(os.getcwd(), "static", "moving_avg_images")
+    images = []
+    for img in os.listdir(img_folder):
+        if img.lower().endswith('.png'):
+            img_path = 'moving_avg_images/' + img
+            img_path = img_path.lstrip('/')
+            images.append(img_path)
 
     return render_template('index.html', title='Stock Analysis',
                            header='Analyzing Major Bank Stocks',
-                           section_title='Analysis Notes',
-                           content='Presenting a basic analysis of JPMorgan, Goldman Sachs,'
+                           images=images,
+                           section_title='20-Day Moving Average Price',
+                           content='Presenting 20-day moving average price of JPMorgan, Goldman Sachs,'
                                    ' Citigroup, and Bank of America. Time series data for the past 20 years is pulled'
-                                   ' from AlphaVantage free API. From this data, python scripts calculate daily returns,'
-                                   ' correlation, standard deviation, and model a basic linear regression.'
-                                   ' The model predicts daily returns with the 20-day moving average price.')
+                                   ' from AlphaVantage free API. From this data,'
+                                   ' python scripts calculate the 20-day moving average price from 2000 - 2024.')
 
 
 @app.route("/correlation")
 def correlation():
-    frame_dict = get_multiple_stock_df(INTERESTED_STOCKS)
-    heatmap = correl_heatmap(frame_dict)
-    print(len(heatmap))
+    image = "correlation_heatmap.png"
     return render_template('index.html', title='Correlation',
-                           header='Finance Stock Analysis',
-                           section_title='correlation',
-                           content='hiiiiiii', image=heatmap)
+                           header='Correlation Analysis',
+                           section_title='',
+                           content='', image=image)
 
 
 @app.route("/stdev")
-def standard_deviation():
+def standard_deviation():   ### UNFINISHED HIT API LIMIT
+    stock_data_dict = get_multiple_stock_df(INTERESTED_STOCKS)
+    standard_dev_table = calc_stdev(stock_data_dict)
+
     return render_template('index.html', title='Stock Analysis',
                            header='Analyzing Major Bank Stocks',
                            section_title='Analysis Notes',
+                           table=standard_dev_table,
                            content='Presenting a basic analysis of JPMorgan, Goldman Sachs,'
                                    ' Citigroup, and Bank of America. Time series data for the past 20 years is pulled'
                                    ' from AlphaVantage free API. From this data, python scripts calculate daily returns,'
@@ -65,7 +68,11 @@ def standard_deviation():
 
 @app.route("/linreg")
 def linear_regression():
-    print("hi")
+    image = "linreg_plot.png"
+    return render_template('index.html', title='Linear Regression Model and Graphic',
+                           header='Linear Regression of JPMorgan',
+                           section_title='',
+                           content='', image=image)
 
 
 if __name__ == "__main__":

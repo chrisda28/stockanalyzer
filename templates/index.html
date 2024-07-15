@@ -9,17 +9,17 @@
     <title>{{ title }}</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<!--    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> &lt;!&ndash; Link to your custom CSS file &ndash;&gt;-->
+    <link href="/static/style.css" rel="stylesheet" >
 </head>
 <body>
     <header class="bg-primary text-white text-center py-3">
         <h1>{{ header }}</h1>
         <nav>
-            <a href="{{ url_for('home') }}" style="color:rgb(255,255,255);">Home</a>
-            <a href="{{ url_for('daily_returns') }}" style="color:rgb(255,255,255);">Daily Returns</a>
-            <a href="{{ url_for('standard_deviation') }}" style="color:rgb(255,255,255);">Standard Deviation</a>
-            <a href="{{ url_for('correlation') }}" style="color:rgb(255,255,255);">Correlation</a>
-            <a href="{{ url_for('linear_regression') }}" style="color:rgb(255,255,255);">Linear Regression Model</a>
+            <a class="btn btn-secondary" href="{{ url_for('home') }}" role="button">Home</a>
+            <a class="btn btn-secondary" href="{{ url_for('standard_deviation') }}" role="button">Standard Deviation</a>
+            <a class="btn btn-secondary" href="{{ url_for('moving_average') }}" role="button">20-Day Moving Average</a>
+            <a class="btn btn-secondary" href="{{ url_for('correlation') }}" role="button">Correlation</a>
+            <a class="btn btn-secondary" href="{{ url_for('linear_regression') }}" role="button">Linear Regression Model</a>
         </nav>
     </header>
 
@@ -28,12 +28,12 @@
         <p> {{ content }}</p>
 
         {% if image %}
-            <img src="data:image/png;base64,{{ image }}" alt="{{ section_title }}"/>
+                <img id="single" src="{{ url_for('static', filename=image) }}" alt="Plot"/>
         {% endif %}
 
         {% if images %}
             {% for img in images %}
-                <img src="data:image/png;base64,{{ img }}" alt="Plot"/>
+                <img id="map" src="{{ url_for('static', filename=img) }}" alt="Plot"/>
             {% endfor %}
         {% endif %}
 
