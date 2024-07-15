@@ -13,14 +13,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template('index.html', title='Stock Analysis',
+    return render_template('home.html', title='Stock Analysis',
                            header='Analyzing Major Bank Stocks',
-                           section_title='Analysis Notes',
-                           content='Presenting a basic analysis of JPMorgan, Goldman Sachs,'
-                                   ' Citigroup, and Bank of America. Time series data for the past 20 years is pulled'
-                                   ' from AlphaVantage free API. From this data, python scripts calculate daily returns,'
-                                   ' correlation, standard deviation, and model a basic linear regression.'
-                                   ' The model predicts daily returns with the 20-day moving average price.')
+                           )
 
 
 @app.route("/dailyreturns")
@@ -33,8 +28,16 @@ def daily_returns():
 
 
 @app.route("/20daymovingavg")
-def moving_average(ticker):
-    pass
+def moving_average():
+
+    return render_template('index.html', title='Stock Analysis',
+                           header='Analyzing Major Bank Stocks',
+                           section_title='Analysis Notes',
+                           content='Presenting a basic analysis of JPMorgan, Goldman Sachs,'
+                                   ' Citigroup, and Bank of America. Time series data for the past 20 years is pulled'
+                                   ' from AlphaVantage free API. From this data, python scripts calculate daily returns,'
+                                   ' correlation, standard deviation, and model a basic linear regression.'
+                                   ' The model predicts daily returns with the 20-day moving average price.')
 
 
 @app.route("/correlation")
@@ -50,7 +53,14 @@ def correlation():
 
 @app.route("/stdev")
 def standard_deviation():
-    print("hi")
+    return render_template('index.html', title='Stock Analysis',
+                           header='Analyzing Major Bank Stocks',
+                           section_title='Analysis Notes',
+                           content='Presenting a basic analysis of JPMorgan, Goldman Sachs,'
+                                   ' Citigroup, and Bank of America. Time series data for the past 20 years is pulled'
+                                   ' from AlphaVantage free API. From this data, python scripts calculate daily returns,'
+                                   ' correlation, standard deviation, and model a basic linear regression.'
+                                   ' The model predicts daily returns with the 20-day moving average price.')
 
 
 @app.route("/linreg")
@@ -60,3 +70,7 @@ def linear_regression():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
+
