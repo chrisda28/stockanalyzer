@@ -107,7 +107,7 @@ def make_20dayma_plot(prepped_data, title):
     # limits to follow date range of data
 
     static_dir = os.path.join(os.getcwd(), 'static')
-    img_path = os.path.join(static_dir, 'golmansachs20dayma.png')
+    img_path = os.path.join(static_dir, 'goldmansachs20dayma.png')
 
     plt.tight_layout()
     plt.savefig(img_path, format='png', dpi=300)

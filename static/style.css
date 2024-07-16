@@ -1,24 +1,41 @@
 
 .container-fluid {
-            max-width: 1400px; /* Adjust this value as needed */
-        }
-        .card {
-            height: 100%;
-            margin-bottom: 20px;
-        }
-        .card-body {
-            display: flex;
-            flex-direction: column;
-        }
-        .card-text {
-            flex-grow: 1;
-        }
-        @media (min-width: 992px) {
-            .col-lg-3 {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-        }
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 1400px; /* Adjust this value as needed */
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 2rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.card-text {
+    flex-grow: 1;
+}
+@media (min-width: 992px) {
+    .col-lg-3 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+.card {
+        height: 100%;
+        margin-bottom: 1rem;
+        background-color: #ffffff;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23007bff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 #map {
   display: block;
@@ -37,4 +54,37 @@
   margin: 0 auto;
   padding-left: 200px;
   padding-right: 200px;
+}
+
+nav {
+    align: right;
+}
+
+.welcome {
+    text-align: center;
+    padding-left: 3rem;
+    padding-top: 3rem;
+    font-size: 100px;
+    max-width: 100%;
+}
+
+.welcome-info {
+    text-align: left;
+    max-width: 50%;
+    padding-top: 3.5rem;
+    padding-left: 5rem;
+    padding-bottom: 3rem;
+    font-size: 30px;
+}
+
+.sectitle{
+    padding-top: 2rem;
+    padding-left: 3rem;
+
+}
+
+.content {
+    padding-top: 1rem;
+    padding-left: 3rem;
+    max-width: 38%;
 }

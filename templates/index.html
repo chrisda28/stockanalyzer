@@ -24,8 +24,8 @@
     </header>
 
     <main>
-        <h2>{{ section_title }}</h2>
-        <p> {{ content }}</p>
+        <h2 class="sectitle" >{{ section_title }}</h2>
+        <p class="content" > {{ content }}</p>
 
         {% if image %}
                 <img id="single" src="{{ url_for('static', filename=image) }}" alt="Plot"/>

@@ -16,7 +16,7 @@ app = Flask(__name__, static_folder='static')
 @app.route("/")
 def home():
     return render_template('home.html', title='Stock Analysis',
-                           header='Analyzing Major Bank Stocks',
+                           header='',
                            )
 
 
