@@ -46,6 +46,10 @@
                 <a href="{{ src }}" class="source">News Source</a>
             {% endfor %}
         {% endif %}
+
+        {% if score %}
+            <h3 class="rsquared"> R^2 value: {{ score }}</h3>
+        {% endif %}
     </main>
 
     <footer class="bg-primary text-center py-3">

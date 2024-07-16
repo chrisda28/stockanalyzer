@@ -51,16 +51,17 @@ def make_stdev_plot(series):
 def prep_data_for_model(df):
     """prepares data to be used in the linear regression model"""
     df = df.copy()   # making copy to avoid messing with original
+    if not isinstance(df.index, pd.DatetimeIndex):
+        df.index = pd.to_datetime(df.index)
     df['daily returns'] = df['close'].pct_change()  # finding the daily returns
     # and setting column name
     df['20 day moving average'] = df['close'].rolling(window=20).mean()  # find
     # the 20-day moving average
     df['previous day close'] = df['close'].shift(periods=1)   # create column
     # for previous day close
-    prepped_frame = df.dropna().reset_index()  # removing NaN values
     # because of the 20-day moving average calc column, need this for clean model data, setting drop to true disregards
     # the old index. then resetting index
-    return prepped_frame
+    return df.dropna()
 
 
 def train_linreg_model(dataframe):
@@ -87,7 +88,7 @@ def predict_returns(model, x):
 
 
 def prepare_data_for_plotting(df):
-    """Prepare data specifically for plotting without affecting original calculations"""
+    """Prepare data specifically for the 20-day moving average plot"""
     plot_df = df.copy()  # making copy of df
     plot_df.index = pd.to_datetime(plot_df.index)  # make date column datetime
     plot_df.sort_index(inplace=True)   # sort by date
@@ -140,14 +141,15 @@ def make_plot(columnx, columny, prepped_data, title):   ## NEED TO ADJUST THIS T
     sb.lmplot(x=columnx, y=columny, data=prepped_data, order=2, ci=None)   # generates scatter plot w regression line
     plt.title(title)   # setting title name of plot
     static_dir = os.path.join(os.getcwd(), 'static')
-    img_path = os.path.join(static_dir, 'linreg_plot.png')
+    img_filename = 'live_linreg_plot.png'
+    img_path = os.path.join(static_dir, img_filename)
 
     plt.tight_layout()
     plt.savefig(img_path, format='png', dpi=300)  # saving plot as an image to be used in flask app
     plt.close()  # closing matplotlib figure to free up memory
 
     print(f"Plot saved to {img_path}")
-    return img_path
+    return img_filename
 
 
 def correl_heatmap(stock_data_dict):

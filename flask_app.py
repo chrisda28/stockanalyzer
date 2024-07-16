@@ -85,11 +85,39 @@ def standard_deviation():
 
 @app.route("/linreg")
 def linear_regression():
-    image = "linreg_plot.png"
+    """render live lin reg model in flask"""
+    ticker = "JPM"
+    jpm_df = get_stock_df(ticker)
+    prepped_jpm_df = prep_data_for_model(jpm_df)
+    model, score = train_linreg_model(prepped_jpm_df)
+
+    latest_data = prepped_jpm_df.iloc[-1]   # getting last row which is the most recent line
+    x_vars = [[latest_data['20 day moving average'], latest_data['close']]]
+
+    predicted_return = predict_returns(model, x_vars)[0]  # Predict the daily return using the model and most recent data
+# The model returns a numpy array, so we use [0] to extract the single predicted value
+# This converts the prediction from an array to a simple number (scalar)
+
+    plot_path = make_plot('20 day moving average', 'daily returns', prepped_jpm_df, f"{ticker} Linear Regression")
+    # Generate a plot of the 20-day moving average vs daily returns
+# The plot is saved as an image file, and the file path is returned
+
+    latest_date = prepped_jpm_df.index[-1].strftime('%Y-%m-%d')  # getting hold of latest data
+    latest_close = latest_data['close']
+    latest_ma = latest_data['20 day moving average']
+
     return render_template('index.html', title='Linear Regression Model and Graphic',
                            header='Linear Regression of JPMorgan',
-                           section_title='',
-                           content='', image=image)
+                           section_title='Live Model Results',
+                           content=f"This model uses daily time series data of JPMorgan's stock. "
+                                   f"Using the calculated 20-day moving average price and closing price, "
+                                   f"the model predicts the stock's daily returns.\n\n"
+                                   f"Model has R^2 value of: {round(score, 4)}"
+                                   f"Latest data as of {latest_date}:\n"
+                                   f" Closing price: ${latest_close:.2f}\n"
+                                   f" 20-day moving average: ${latest_ma:.2f}\n"
+                                   f"Predicted daily return: {predicted_return:.4f}",
+                           image=plot_path)
 
 
 if __name__ == "__main__":
