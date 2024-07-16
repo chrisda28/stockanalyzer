@@ -30,6 +30,24 @@ def calc_stdev(dataframe_dict):  # works the same way as the calc_correlation fu
     return stdev_df
 
 
+def make_stdev_plot(series):
+    df = series.reset_index()
+    df.columns = ["Ticker", "Standard Deviation of Daily Returns"]  # turning series to dataframe
+    sb.barplot(data=df, orient="v", x='Ticker', y='Standard Deviation of Daily Returns')
+    plt.tight_layout()  # Adjust the plot to ensure everything fits without overlapping
+
+    static_dir = os.path.join(os.getcwd(), 'static')
+    img_path = os.path.join(static_dir, 'stdev_plot.png')
+
+    plt.tight_layout()
+    plt.savefig(img_path, format='png', dpi=300)  # saving plot as an image to be used in flask app
+    plt.close()  # closing matplotlib figure to free up memory
+
+    print(f"Plot saved to {img_path}")
+    return img_path
+
+
+
 def prep_data_for_model(df):
     """prepares data to be used in the linear regression model"""
     df = df.copy()   # making copy to avoid messing with original
@@ -146,6 +164,17 @@ def correl_heatmap(stock_data_dict):
 
     print(f"Plot saved to {img_path}")
     return img_path
+
+
+if __name__ == "__main__":
+    from data import get_multiple_stock_df
+    tickers = ['JPM', 'GS', 'BAC', 'C']
+    stock_dict = get_multiple_stock_df(tickers)
+    stdev = calc_stdev(stock_dict)
+    make_stdev_plot(stdev)
+
+
+
 
 
 # if __name__ == "__main__":

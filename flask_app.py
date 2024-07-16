@@ -38,7 +38,9 @@ def moving_average():
                            content='Presenting 20-day moving average price of JPMorgan, Goldman Sachs,'
                                    ' Citigroup, and Bank of America. Time series data for the past 20 years is pulled'
                                    ' from AlphaVantage free API. From this data,'
-                                   ' python scripts calculate the 20-day moving average price from 2000 - 2024.')
+                                   ' python scripts use the Pandas library '
+                                   ' to calculate the 20-day moving average price from 2000 - 2024. Visualizations are'
+                                   ' created with Seaborn and Matplotlib, then saved as images and rendered.')
 
 
 @app.route("/correlation")
