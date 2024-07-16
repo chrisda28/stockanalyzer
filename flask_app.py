@@ -45,27 +45,42 @@ def moving_average():
 
 @app.route("/correlation")
 def correlation():
+    """render correlation heatmap"""
     image = "correlation_heatmap.png"
+    sources = ['https://www.emarketer.com/content/citibank-shores-up-core-offerings-plan-shrink-mexico-footprint',
+               'https://www.citigroup.com/global/news/perspective/2023/our-strategy-to-simplify-lessons-from-'
+               'our-divestiture-journey-titi-cole']
     return render_template('index.html', title='Correlation',
                            header='Correlation Analysis',
-                           section_title='',
-                           content='', image=image)
+                           section_title='Correlation',
+                           sources=sources,
+                           content="Citigroup's lower correlation to other three banks is caused by a shift in focus. "
+                                   "Citigroup has shifted away from personal banking services in Mexico and focusing "
+                                   "more on U.S. personal banking services."
+                                   " In 2021, Citi revealed intentions to exit 13"
+                                   " markets across Asia and Europe - instead focusing on other higher-returning "
+                                   "businesses. This shift from international markets may explain stark differences in"
+                                   " Citigroup's correlation with the other three banks who maintain their "
+                                   "international presence. View sources below.", image=image)
 
 
 @app.route("/stdev")
-def standard_deviation():   ### UNFINISHED HIT API LIMIT
-    stock_data_dict = get_multiple_stock_df(INTERESTED_STOCKS)
-    standard_dev_table = calc_stdev(stock_data_dict)
-
+def standard_deviation():
+    """render barplot for stdev of daily returns for each stock"""
+    image = "stdev_plot.png"
+    sources = ['https://www.forbes.com/sites/johnbuckingham/2024/04/17/volatility-price-of-successful-equity-'
+               'investing--liking-citigroup/', 'https://internationalbanker.com/banking/major-restructuring-seeks-to-'
+                                               'restore-citigroups-competitiveness-among-us-banking-elite/' ]
     return render_template('index.html', title='Stock Analysis',
                            header='Analyzing Major Bank Stocks',
-                           section_title='Analysis Notes',
-                           table=standard_dev_table,
-                           content='Presenting a basic analysis of JPMorgan, Goldman Sachs,'
-                                   ' Citigroup, and Bank of America. Time series data for the past 20 years is pulled'
-                                   ' from AlphaVantage free API. From this data, python scripts calculate daily returns,'
-                                   ' correlation, standard deviation, and model a basic linear regression.'
-                                   ' The model predicts daily returns with the 20-day moving average price.')
+                           section_title='Standard Deviation of Daily Returns',
+                           image=image,
+                           sources=sources,
+                           content="Insights\n Citigroup's volatility is largely from restructuring efforts resulting in"
+                                   " strategic shifts and cost-cutting measures. These efforts introduce short-term un"
+                                   "certainty. Pair this with unfavorable past financial performance and this will explain"
+                                   " the disparity between Citigroup and the other three banks' volatility. "
+                                   "View news sources below.")
 
 
 @app.route("/linreg")

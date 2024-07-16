@@ -23,7 +23,7 @@
         </nav>
     </header>
 
-    <main>
+    <main class="bg-primary text-white py-3">
         <h2 class="sectitle" >{{ section_title }}</h2>
         <p class="content" > {{ content }}</p>
 
@@ -40,9 +40,15 @@
         {% if table %}
             {{ table | safe }}
         {% endif %}
+
+        {% if sources %}
+            {% for src in sources %}
+                <a href="{{ src }}" class="source">News Source</a>
+            {% endfor %}
+        {% endif %}
     </main>
 
-    <footer class="bg-light text-center py-3">
+    <footer class="bg-primary text-center py-3">
         <p>&copy; 2024 Christian Asimou. All rights reserved.</p>
     </footer>
 
