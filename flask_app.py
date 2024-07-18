@@ -1,10 +1,17 @@
 import os.path
-
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')   # this allows matplotlib to use different backend that doesn't require GUI
+import matplotlib.pyplot as plt
+import seaborn as sb
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 from flask import Flask, render_template, url_for
 from data import get_stock_df, get_multiple_stock_df
 from analysis import (make_plot, calc_correlation, calc_stdev, calc_daily_returns, train_linreg_model, predict_returns,
                       prep_data_for_model, correl_heatmap)
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
 import io
 import base64
 
@@ -55,7 +62,8 @@ def correlation():
                            section_title='Correlation',
                            sources=sources,
                            content="Citigroup's lower correlation to other three banks is caused by a shift in focus. "
-                                   "Citigroup has shifted away from personal banking services in Mexico and focusing "
+                                   "Citigroup has shifted away from personal banking services "
+                                   "in Mexico and is focusing "
                                    "more on U.S. personal banking services."
                                    " In 2021, Citi revealed intentions to exit 13"
                                    " markets across Asia and Europe - instead focusing on other higher-returning "
@@ -90,11 +98,15 @@ def linear_regression():
     jpm_df = get_stock_df(ticker)
     prepped_jpm_df = prep_data_for_model(jpm_df)
     model, score = train_linreg_model(prepped_jpm_df)
-
+    score = round(score, 4)   # formatting the r^2 value
     latest_data = prepped_jpm_df.iloc[-1]   # getting last row which is the most recent line
-    x_vars = [[latest_data['20 day moving average'], latest_data['close']]]
+    x_vars = pd.DataFrame({
+        '20 day moving average': [latest_data['20 day moving average']],
+        'close': [latest_data['close']]
+    })
 
-    predicted_return = predict_returns(model, x_vars)[0]  # Predict the daily return using the model and most recent data
+    predicted_return = predict_returns(model, x_vars)[0]
+    predicted_return = round(predicted_return, 4) # Predict the daily return using the model and most recent data
 # The model returns a numpy array, so we use [0] to extract the single predicted value
 # This converts the prediction from an array to a simple number (scalar)
 
@@ -109,14 +121,18 @@ def linear_regression():
     return render_template('index.html', title='Linear Regression Model and Graphic',
                            header='Linear Regression of JPMorgan',
                            section_title='Live Model Results',
-                           content=f"This model uses daily time series data of JPMorgan's stock. "
-                                   f"Using the calculated 20-day moving average price and closing price, "
-                                   f"the model predicts the stock's daily returns.\n\n"
-                                   f"Model has R^2 value of: {round(score, 4)}"
-                                   f"Latest data as of {latest_date}:\n"
-                                   f" Closing price: ${latest_close:.2f}\n"
-                                   f" 20-day moving average: ${latest_ma:.2f}\n"
-                                   f"Predicted daily return: {predicted_return:.4f}",
+                           score=score,
+                           last_date=latest_date,
+                           last_ma=latest_ma,
+                           latest_close=latest_close,
+                           predicted_return=predicted_return,
+                           content=f"This model uses JPMorgan's historical calculated 20-day moving average price and"
+                                   f" closing price to learn patterns and make predictions of daily returns."
+                                   f" The predicted return is the model's estimate of the next day's price"
+                                   f" change as a percentage. The R^2 value ranges from 0 to 1 and explains how"
+                                   f" well the model explains the variability of the data. "
+                                   f"While the R^2 of this model is low,"
+                                   f" it provides a great platform for which to improve upon. ",
                            image=plot_path)
 
 

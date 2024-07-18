@@ -50,6 +50,22 @@
         {% if score %}
             <h3 class="rsquared"> R^2 value: {{ score }}</h3>
         {% endif %}
+
+        {% if last_date %}
+            <h3 class="last-date"> Latest Date: {{ last_date }}</h3>
+        {% endif %}
+
+        {% if last_ma %}
+            <h3 class="last-ma"> Latest Moving Average Price: {{ last_ma }}</h3>
+        {% endif %}
+
+        {% if latest_close %}
+            <h3 class="last-close"> Latest Close: {{ latest_close }}</h3>
+        {% endif %}
+
+        {% if predicted_return %}
+            <h3 class="predict-return"> Predicted Return: {{ predicted_return }}</h3>
+        {% endif %}
     </main>
 
     <footer class="bg-primary text-center py-3">

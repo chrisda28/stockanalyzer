@@ -95,3 +95,24 @@ nav {
     padding-left: 3rem;
     font-size: 20px;
 }
+
+.rsquared {
+    padding-left: 3rem;
+}
+
+.last-date {
+    padding-left: 3rem;
+
+}
+
+.last-ma{
+    padding-left: 3rem;
+}
+
+.last-close{
+    padding-left: 3rem;
+}
+
+.predict-return {
+    padding-left: 3rem;
+}

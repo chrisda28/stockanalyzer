@@ -1,10 +1,13 @@
 import pandas as pd
 import seaborn as sb
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 
 def calc_daily_returns(df):
@@ -138,7 +141,8 @@ def make_20dayma_plot(prepped_data, title):
 
 def make_plot(columnx, columny, prepped_data, title):   ## NEED TO ADJUST THIS TO SAVE IMG IN STATIC FOLDER
     """generate plot and return it as an image"""
-    sb.lmplot(x=columnx, y=columny, data=prepped_data, order=2, ci=None)   # generates scatter plot w regression line
+    fig, ax = plt.subplots()
+    sb.regplot(x=columnx, y=columny, data=prepped_data, order=2, ci=None, ax=ax)   # generates scatter plot w regression line
     plt.title(title)   # setting title name of plot
     static_dir = os.path.join(os.getcwd(), 'static')
     img_filename = 'live_linreg_plot.png'
@@ -146,7 +150,7 @@ def make_plot(columnx, columny, prepped_data, title):   ## NEED TO ADJUST THIS T
 
     plt.tight_layout()
     plt.savefig(img_path, format='png', dpi=300)  # saving plot as an image to be used in flask app
-    plt.close()  # closing matplotlib figure to free up memory
+    plt.close(fig)  # closing matplotlib figure to free up memory
 
     print(f"Plot saved to {img_path}")
     return img_filename
