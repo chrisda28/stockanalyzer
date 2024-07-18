@@ -1,7 +1,6 @@
 import pandas as pd
 import requests
 import time
-import os
 from dotenv import load_dotenv
 from api_limit_checking import *
 
@@ -23,15 +22,15 @@ def get_stock_df(ticker):
             "apikey": API_KEY
         }
 
-    response = requests.get(ENDPOINT, params=parameters)
+    response = requests.get(ENDPOINT, params=parameters)  # making API call
     response.raise_for_status()    # used for https errors
-    json_data = response.json()
+    json_data = response.json()   # format to json
     time_series_data = json_data.get("Time Series (Daily)", {})  # getting the time series data into dict
-    if not time_series_data:   # checking if we hit limit
-        print(f"No data received for {ticker}. This might be due to reaching the API limit.")
+    if not time_series_data:   # checking if API limit reached
+        print(f"No data received for {ticker}. Might be due to reaching the API limit.")
         return None
 
-    df = pd.DataFrame.from_dict(time_series_data, orient='index')
+    df = pd.DataFrame.from_dict(time_series_data, orient='index')  # convert to data frame
     df.index = pd.to_datetime(df.index)   # making sure index treated as datetime
     df = df.astype(float)  # Convert strings to floats
     df.columns = ['open', 'high', 'low', 'close', 'volume']    # setting column names
@@ -58,22 +57,10 @@ def get_multiple_stock_df(tickers):
     return dict_of_all_stock_df
 
 
-if __name__ == "__main__":
-    test_tickers = ["JPM"]
-    stock = get_stock_df(test_tickers)
-    print(stock)
+# if __name__ == "__main__":  # usage example
+#     test_tickers = ["JPM"]
+#     stock = get_stock_df(test_tickers)
+#     print(stock)
 
-
-
-
-# if __name__ == "__main__":
-#     test_tickers = ["JPM", "GS", "C", "BAC"]
-#     try:
-#         result = get_multiple_stock_df(test_tickers)
-#         print(f"Successfully fetched data for {len(result)} stocks.")
-#         for ticker, df in result.items():
-#             print(f"{ticker}: {len(df)} rows of data")
-#     except Exception as e:
-#         print(f"An error occurred: {str(e)}")
 
 
