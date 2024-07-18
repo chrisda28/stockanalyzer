@@ -1,13 +1,13 @@
 import os.path
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta  # timedelta can be used for calculations involving time
 import functools   # used to preserve metadata of function (i.e. function name, docstring)
 
 
 def api_tracking():
     track_file = "api_tracker.txt"   # defines file name
-    today = datetime.now().date()
+    today = datetime.now().date()  # get today's date
 
-    if os.path.exists(track_file):
+    if os.path.exists(track_file):   # check if file is there and if so adjust count based on date
         with open(track_file, 'r') as file:
             last_date, count = file.read().split(',')
             last_date = datetime.strptime(last_date, '%Y-%m-%d').date()  # converts data string
@@ -30,7 +30,7 @@ def api_tracking():
 def api_limit_checker(func):
     @functools.wraps(func)   # used to preserve meta data of function, like name and docstring
     def wrapper(*args, **kwargs):
-        call_count = api_tracking()
+        call_count = api_tracking()   # using output from above
         if call_count > 25:   # checking if limit has been exceeded
             print("API limit of 25 calls per day exceeded")
             return None   # carried out instead of making an API call
